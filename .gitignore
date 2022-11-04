@@ -1,9 +1,12 @@
 fedimint-ffi/target
 fedimint-ffi/Cargo.lock
 
-ffi-bindgen/target
-ffi-bindgen/Cargo.lock
+fedimint-ffi/ffi-bindgen/target
+fedimint-ffi/ffi-bindgen/Cargo.lock
 
 .idea/
 fedimint-bindings.iml
-
+libfedimintffi.so
+fedimint.kt
+local.properties
+.DS_Store
