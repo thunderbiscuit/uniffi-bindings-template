@@ -1,0 +1,12 @@
+[bindings.kotlin]
+package_name = "org.fedimint"
+cdylib_name = "fedimintffi"
+
+[bindings.python]
+cdylib_name = "fedimintffi"
+
+[bindings.ruby]
+cdylib_name = "fedimintffi"
+
+[bindings.swift]
+cdylib_name = "fedimintffi"
