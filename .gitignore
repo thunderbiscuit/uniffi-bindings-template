@@ -1,0 +1,7 @@
+/target
+.idea/
+fedimint-ffi/Cargo.lock
+ffi-bindgen/Cargo.lock
+fedimint-bindings.iml
+fedimint-ffi/target/
+ffi-bindgen/target/
