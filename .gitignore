@@ -1,12 +1,12 @@
-fedimint-ffi/target
-fedimint-ffi/Cargo.lock
+calculator-ffi/target
+calculator-ffi/Cargo.lock
 
-fedimint-ffi/ffi-bindgen/target
-fedimint-ffi/ffi-bindgen/Cargo.lock
+calculator-ffi/ffi-bindgen/target
+calculator-ffi/ffi-bindgen/Cargo.lock
 
 .idea/
-fedimint-bindings.iml
-libfedimintffi.so
-fedimint.kt
+calculator-bindings.iml
+libcalculatorffi.so
+calculator.kt
 local.properties
 .DS_Store

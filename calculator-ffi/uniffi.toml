@@ -1,0 +1,12 @@
+[bindings.kotlin]
+package_name = "org.rustylibs.calculator"
+cdylib_name = "calculatorffi"
+
+[bindings.python]
+cdylib_name = "calculatorffi"
+
+[bindings.ruby]
+cdylib_name = "calculatorffi"
+
+[bindings.swift]
+cdylib_name = "calculatorffi"

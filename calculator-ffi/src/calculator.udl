@@ -1,0 +1,29 @@
+namespace calculator {
+  string welcome(string name);
+};
+
+[Error]
+enum CalculatorError {
+  "DivisionBy0",
+};
+
+dictionary CalculatorData {
+  string model;
+  CalculatorSize size;
+};
+
+enum CalculatorSize {
+  "Big",
+  "Small",
+};
+
+interface Calculator {
+  constructor(CalculatorData info);
+
+  string get_info();
+
+  i32 add(i32 a, i32 b);
+
+  [Throws=CalculatorError]
+  i32 divide(i32 a, i32 b);
+};

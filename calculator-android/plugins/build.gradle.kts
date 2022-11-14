@@ -6,8 +6,8 @@ plugins {
 gradlePlugin {
     plugins {
         create("uniFfiAndroidBindings") {
-            id = "org.fedimint.plugins.generate-android-bindings"
-            implementationClass = "org.fedimint.plugins.UniFfiAndroidPlugin"
+            id = "org.rustylibs.plugins.generate-android-bindings"
+            implementationClass = "org.rustylibs.plugins.UniFfiAndroidPlugin"
         }
     }
 }

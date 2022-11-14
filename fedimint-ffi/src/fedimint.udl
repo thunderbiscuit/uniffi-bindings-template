@@ -1,3 +1,0 @@
-namespace fedimint {
-  i32 fedi_add(i32 a, i32 b);
-};

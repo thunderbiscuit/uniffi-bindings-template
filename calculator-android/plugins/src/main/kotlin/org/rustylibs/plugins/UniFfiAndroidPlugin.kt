@@ -1,4 +1,4 @@
-package org.fedimint.plugins
+package org.rustylibs.plugins
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -20,7 +20,7 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
         // arm64-v8a is the most popular hardware architecture for Android
         val buildAndroidAarch64Binary by tasks.register<Exec>("buildAndroidAarch64Binary") {
 
-            workingDir("${projectDir}/../../fedimint-ffi")
+            workingDir("${projectDir}/../../calculator-ffi")
             val cargoArgs: MutableList<String> =
                 mutableListOf("build", "--release", "--target", "aarch64-linux-android")
 
@@ -45,14 +45,14 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
             )
 
             doLast {
-                println("Native library for fedimint-android on aarch64 built successfully")
+                println("Native library for calculator-android on aarch64 built successfully")
             }
         }
 
         // the x86_64 version of the library is mostly used by emulators
         val buildAndroidX86_64Binary by tasks.register<Exec>("buildAndroidX86_64Binary") {
 
-            workingDir("${project.projectDir}/../../fedimint-ffi")
+            workingDir("${project.projectDir}/../../calculator-ffi")
             val cargoArgs: MutableList<String> =
                 mutableListOf("build", "--release", "--target", "x86_64-linux-android")
 
@@ -77,14 +77,14 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
             )
 
             doLast {
-                println("Native library for fedimint-android on x86_64 built successfully")
+                println("Native library for calculator-android on x86_64 built successfully")
             }
         }
 
         // armeabi-v7a version of the library for older 32-bit Android hardware
         val buildAndroidArmv7Binary by tasks.register<Exec>("buildAndroidArmv7Binary") {
 
-            workingDir("${project.projectDir}/../../fedimint-ffi")
+            workingDir("${project.projectDir}/../../calculator-ffi")
             val cargoArgs: MutableList<String> =
                 mutableListOf("build", "--release", "--target", "armv7-linux-androideabi")
 
@@ -110,12 +110,12 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
             )
 
             doLast {
-                println("Native library for fedimint-android on armv7 built successfully")
+                println("Native library for calculator-android on armv7 built successfully")
             }
         }
 
-        // move the native libs build by cargo from fedimint-ffi/target/<architecture>/release/
-        // to their place in the fedimint-android library
+        // move the native libs build by cargo from calculator-ffi/target/<architecture>/release/
+        // to their place in the calculator-android library
         // the task only copies the available binaries built using the buildAndroid<architecture>Binary tasks
         val moveNativeAndroidLibs by tasks.register<Copy>("moveNativeAndroidLibs") {
 
@@ -124,15 +124,15 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
             into("${project.projectDir}/../lib/src/main/jniLibs/")
 
             into("arm64-v8a") {
-                from("${project.projectDir}/../../fedimint-ffi/target/aarch64-linux-android/release/libfedimintffi.so")
+                from("${project.projectDir}/../../calculator-ffi/target/aarch64-linux-android/release/libcalculatorffi.so")
             }
 
             into("x86_64") {
-                from("${project.projectDir}/../../fedimint-ffi/target/x86_64-linux-android/release/libfedimintffi.so")
+                from("${project.projectDir}/../../calculator-ffi/target/x86_64-linux-android/release/libcalculatorffi.so")
             }
 
             into("armeabi-v7a") {
-                from("${project.projectDir}/../../fedimint-ffi/target/armv7-linux-androideabi/release/libfedimintffi.so")
+                from("${project.projectDir}/../../calculator-ffi/target/armv7-linux-androideabi/release/libcalculatorffi.so")
             }
 
             doLast {
@@ -144,7 +144,7 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
         val generateAndroidBindings by tasks.register<Exec>("generateAndroidBindings") {
             dependsOn(moveNativeAndroidLibs)
 
-            workingDir("${project.projectDir}/../../fedimint-ffi")
+            workingDir("${project.projectDir}/../../calculator-ffi")
             executable("cargo")
             args(
                 "run",
@@ -154,7 +154,7 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
                 "--language",
                 "kotlin",
                 "--out-dir",
-                "../fedimint-android/lib/src/main/kotlin"
+                "../calculator-android/lib/src/main/kotlin"
             )
 
             doLast {
@@ -165,7 +165,7 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
         // create an aggregate task which will run the required tasks to build the Android libs in order
         // the task will also appear in the printout of the `./gradlew tasks` task with group and description
         tasks.register("buildAndroidLib") {
-            group = "Fedimint"
+            group = "Calculator"
             description = "Aggregate task to build Android library"
 
             dependsOn(
