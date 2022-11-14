@@ -1,4 +1,4 @@
-package org.fedimint.plugins
+package org.rustylibs.plugins
 
 val operatingSystem: OS = when {
     System.getProperty("os.name").contains("mac", ignoreCase = true) -> OS.MAC

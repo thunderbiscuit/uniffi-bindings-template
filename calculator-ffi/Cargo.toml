@@ -1,0 +1,19 @@
+[package]
+name = "calculator-bindings"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = [".", "./ffi-bindgen"]
+default-members = [".", "./ffi-bindgen"]
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+name = "calculatorffi"
+
+[dependencies]
+uniffi_macros = { version = "0.21.0", features = ["builtin-bindgen"] }
+uniffi = { version = "0.21.0", features = ["builtin-bindgen"] }
+
+[build-dependencies]
+uniffi_build = { version = "0.21.0", features = ["builtin-bindgen"] }
