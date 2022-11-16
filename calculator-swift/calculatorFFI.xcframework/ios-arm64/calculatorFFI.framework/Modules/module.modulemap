@@ -1,0 +1,6 @@
+framework module calculatorFFI {
+  umbrella header "calculatorFFI-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,8 +1,5 @@
-calculator-ffi/target
-calculator-ffi/Cargo.lock
-
-calculator-ffi/ffi-bindgen/target
-calculator-ffi/ffi-bindgen/Cargo.lock
+target
+Cargo.lock
 
 .idea/
 calculator-bindings.iml
@@ -10,3 +7,19 @@ libcalculatorffi.so
 calculator.kt
 local.properties
 .DS_Store
+
+# swift related
+/.build
+/.swiftpm
+/Packages
+/*.xcodeproj
+xcuserdata/
+DerivedData/
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+calculatorFFI.xcframework.zip
+calculatorFFI
+*.a
+Calculator.swift
+calculatorFFI.h
+.build
+.swiftpm
