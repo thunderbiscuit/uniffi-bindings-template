@@ -1,0 +1,102 @@
+name: Build, tag and create release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'New release version, eg. 0.MINOR.PATCH'
+        required: true
+        type: string
+
+jobs:
+  build-publish:
+    name: Build, tag and create release
+    runs-on: macos-12
+    steps:
+      - name: Checkout release branch
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ./target
+          key: ${{ runner.os }}-${{ hashFiles('**/Cargo.toml','**/Cargo.lock') }}
+
+      - name: Install Rust targets
+        run: |
+          rustup install nightly-x86_64-apple-darwin
+          rustup component add rust-src --toolchain nightly-x86_64-apple-darwin
+          rustup target add aarch64-apple-ios x86_64-apple-ios
+          rustup target add aarch64-apple-ios-sim --toolchain nightly
+          rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
+      - name: Run ffi-bindgen
+        working-directory: calculator-ffi
+        run: cargo run --package ffi-bindgen -- --language swift --out-dir ../calculator-swift/Sources/Calculator
+
+      - name: Build calculator-ffi for x86_64-apple-darwin
+        run: cargo build --package calculator-ffi --profile release-smaller --target x86_64-apple-darwin
+
+      - name: Build calculator-ffi for aarch64-apple-darwin
+        run: cargo build --package calculator-ffi --profile release-smaller --target aarch64-apple-darwin
+
+      - name: Build calculator-ffi for x86_64-apple-ios
+        run: cargo build --package calculator-ffi --profile release-smaller --target x86_64-apple-ios
+
+      - name: Build calculator-ffi for aarch64-apple-ios
+        run: cargo build --package calculator-ffi --profile release-smaller --target aarch64-apple-ios
+
+      - name: Build bdk-ffi for aarch64-apple-ios-sim
+        run: cargo +nightly build --package calculator-ffi --release -Z build-std --target aarch64-apple-ios-sim
+
+      - name: Create lipo-ios-sim and lipo-macos
+        run: |
+          mkdir -p target/lipo-ios-sim/release-smaller
+          lipo target/aarch64-apple-ios-sim/release/libcalculatorffi.a target/x86_64-apple-ios/release-smaller/libcalculatorffi.a -create -output target/lipo-ios-sim/release-smaller/libcalculatorffi.a
+          mkdir -p target/lipo-macos/release-smaller
+          lipo target/aarch64-apple-darwin/release-smaller/libcalculatorffi.a target/x86_64-apple-darwin/release-smaller/libcalculatorffi.a -create -output target/lipo-macos/release-smaller/libcalculatorffi.a
+
+      - name: Create calculatorFFI.xcframework
+        working-directory: calculator-swift
+        run: |
+          mv Sources/Calculator/calculator.swift Sources/Calculator/Calculator.swift
+          cp Sources/Calculator/calculatorFFI.h calculatorFFI.xcframework/ios-arm64/calculatorFFI.framework/Headers
+          cp Sources/Calculator/calculatorFFI.h calculatorFFI.xcframework/ios-arm64_x86_64-simulator/calculatorFFI.framework/Headers
+          cp Sources/Calculator/calculatorFFI.h calculatorFFI.xcframework/macos-arm64_x86_64/calculatorFFI.framework/Headers
+          cp ../target/aarch64-apple-ios/release-smaller/libcalculatorffi.a calculatorFFI.xcframework/ios-arm64/calculatorFFI.framework/calculatorFFI
+          cp ../target/lipo-ios-sim/release-smaller/libcalculatorffi.a calculatorFFI.xcframework/ios-arm64_x86_64-simulator/calculatorFFI.framework/calculatorFFI
+          cp ../target/lipo-macos/release-smaller/libcalculatorffi.a calculatorFFI.xcframework/macos-arm64_x86_64/calculatorFFI.framework/calculatorFFI
+          rm Sources/Calculator/calculatorFFI.h
+          rm Sources/Calculator/calculatorFFI.modulemap
+          rm calculatorFFI.xcframework.zip || true
+          zip -9 -r calculatorFFI.xcframework.zip calculatorFFI.xcframework
+          echo "CALCFFICHECKSUM=`swift package compute-checksum calculatorFFI.xcframework.zip`" >> $GITHUB_ENV
+          echo "CALCFFIURL=https\:\/\/github\.com\/${{ github.repository_owner }}\/calculator\-swift\/releases\/download\/${{ inputs.version }}\/calculatorFFI\.xcframework\.zip" >> $GITHUB_ENV
+
+      - name: Update, commit, and push new Package.swift
+        run: |
+          echo checksum = ${{ env.CALCFFICHECKSUM }}
+          echo url = ${{ env.CALCFFIURL }}
+          sed "s/CALCFFICHECKSUM/${CALCFFICHECKSUM}/;s/CALCFFIURL/${CALCFFIURL}/" Package.swift.txt > Package.swift
+          git add Sources/Calculator/Calculator.swift
+          git add Package.swift
+          git commit -m "Update Calculator.swift and Package.swift for release ${{ inputs.version }}"
+          git push
+
+      - name: Tag new release
+        run: |
+          git tag ${{ inputs.version }} -m "Release ${{ inputs.version }}"
+          git push --tags
+
+      - name: Publish release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "calculatorFFI.xcframework.zip"
+          tag: ${{ inputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Release ${{ inputs.version }}
+          prerelease: true
