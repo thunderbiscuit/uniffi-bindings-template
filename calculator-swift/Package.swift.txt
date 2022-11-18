@@ -28,7 +28,7 @@ let package = Package(
             checksum: "CALCFFICHECKSUM"),
         .target(
             name: "Calculator",
-            dependencies: ["calculator"]),
+            dependencies: ["calculatorFFI"]),
         .testTarget(
             name: "CalculatorTests",
             dependencies: ["Calculator"]),

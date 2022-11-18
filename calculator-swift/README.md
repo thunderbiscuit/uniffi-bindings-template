@@ -32,8 +32,9 @@ swift test
 If you are a maintainer of this project or want to build and publish this project to your 
 own Github repository use the following steps:
 
-1. If it doesn't already exist, create a new `release/0.MINOR` branch from the `master` branch
-2. Run the `publish-spm` workflow on Github for branch `release/0.MINOR` and version `0.MINOR.0`
+1. If it doesn't already exist, create a new `release/0.MINOR` branch from the `master` branch.
+2. Add a tag `v0.MINOR.0`.
+3. Run the `publish-spm` workflow on Github from the `calculator-swift` repo for  version `0.MINOR.0`.
 
 [Swift]: https://developer.apple.com/swift/
 [Xcode]: https://developer.apple.com/documentation/Xcode
