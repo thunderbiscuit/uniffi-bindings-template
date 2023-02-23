@@ -5,6 +5,7 @@ namespace calculator {
 [Error]
 enum CalculatorError {
   "DivisionBy0",
+  "OtherError",
 };
 
 dictionary CalculatorData {
@@ -17,6 +18,12 @@ enum CalculatorSize {
   "Small",
 };
 
+enum Event {
+  "Party",
+  "Birthday",
+  "Meeting",
+};
+
 interface Calculator {
   constructor(CalculatorData info);
 
@@ -26,4 +33,19 @@ interface Calculator {
 
   [Throws=CalculatorError]
   i32 divide(i32 a, i32 b);
+};
+
+callback interface Reminder {
+  [Throws=CalculatorError]
+  string remind_me();
+
+  [Throws=CalculatorError]
+  void ping_me(Event event);
+};
+
+interface Calendar {
+  constructor(Reminder reminder);
+  string today();
+  string my_events();
+  void start();
 };
