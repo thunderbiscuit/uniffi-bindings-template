@@ -21,13 +21,12 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
         val buildAndroidAarch64Binary by tasks.register<Exec>("buildAndroidAarch64Binary") {
 
             workingDir("${projectDir}/../../calculator-ffi")
-            val cargoArgs: MutableList<String> =
-                mutableListOf("build", "--release", "--target", "aarch64-linux-android")
+            val cargoArgs: MutableList<String> = mutableListOf("build", "--features", "uniffi/cli", "--profile", "release-smaller", "--target", "aarch64-linux-android")
 
             executable("cargo")
             args(cargoArgs)
 
-            // if ANDROID_NDK_ROOT is not set then set it to GitHub actions default
+            // If ANDROID_NDK_ROOT is not set then set it to GitHub actions default
             if (System.getenv("ANDROID_NDK_ROOT") == null) {
                 environment(
                     Pair("ANDROID_NDK_ROOT", "${System.getenv("ANDROID_SDK_ROOT")}/ndk-bundle")
@@ -35,9 +34,8 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
             }
 
             environment(
-                // add build toolchain to PATH
-                Pair("PATH",
-                    "${System.getenv("PATH")}:${System.getenv("ANDROID_NDK_ROOT")}/toolchains/llvm/prebuilt/$llvmArchPath/bin"),
+                // Add build toolchain to PATH
+                Pair("PATH", "${System.getenv("PATH")}:${System.getenv("ANDROID_NDK_ROOT")}/toolchains/llvm/prebuilt/$llvmArchPath/bin"),
 
                 Pair("CFLAGS", "-D__ANDROID_API__=21"),
                 Pair("CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER", "aarch64-linux-android21-clang"),
@@ -54,7 +52,7 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
 
             workingDir("${project.projectDir}/../../calculator-ffi")
             val cargoArgs: MutableList<String> =
-                mutableListOf("build", "--release", "--target", "x86_64-linux-android")
+                mutableListOf("build", "--features", "uniffi/cli", "--profile", "release-smaller", "--target", "x86_64-linux-android")
 
             executable("cargo")
             args(cargoArgs)
@@ -86,7 +84,7 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
 
             workingDir("${project.projectDir}/../../calculator-ffi")
             val cargoArgs: MutableList<String> =
-                mutableListOf("build", "--release", "--target", "armv7-linux-androideabi")
+                mutableListOf("build", "--features", "uniffi/cli", "--profile", "release-smaller", "--target", "armv7-linux-androideabi")
 
             executable("cargo")
             args(cargoArgs)
@@ -100,12 +98,10 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
 
             environment(
                 // add build toolchain to PATH
-                Pair("PATH",
-                    "${System.getenv("PATH")}:${System.getenv("ANDROID_NDK_ROOT")}/toolchains/llvm/prebuilt/$llvmArchPath/bin"),
+                Pair("PATH", "${System.getenv("PATH")}:${System.getenv("ANDROID_NDK_ROOT")}/toolchains/llvm/prebuilt/$llvmArchPath/bin"),
 
                 Pair("CFLAGS", "-D__ANDROID_API__=21"),
-                Pair("CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER",
-                    "armv7a-linux-androideabi21-clang"),
+                Pair("CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER", "armv7a-linux-androideabi21-clang"),
                 Pair("CC", "armv7a-linux-androideabi21-clang")
             )
 
@@ -145,17 +141,9 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
             dependsOn(moveNativeAndroidLibs)
 
             workingDir("${project.projectDir}/../../calculator-ffi")
+            val cargoArgs: List<String> = listOf("run", "--features", "uniffi/cli", "--bin", "uniffi-bindgen", "generate", "src/calculator.udl", "--language", "kotlin", "--out-dir", "../calculator-android/lib/src/main/kotlin", "--no-format")
             executable("cargo")
-            args(
-                "run",
-                "--package",
-                "ffi-bindgen",
-                "--",
-                "--language",
-                "kotlin",
-                "--out-dir",
-                "../calculator-android/lib/src/main/kotlin"
-            )
+            args(cargoArgs)
 
             doLast {
                 println("Android bindings file successfully created")

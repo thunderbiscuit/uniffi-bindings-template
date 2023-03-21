@@ -5,14 +5,14 @@ rustup target add aarch64-apple-ios-sim --toolchain nightly
 rustup target add aarch64-apple-darwin x86_64-apple-darwin
 
 pushd calculator-ffi
-cargo run --package ffi-bindgen -- --language swift --out-dir ../calculator-swift/Sources/Calculator
+cargo run --features uniffi/cli --bin uniffi-bindgen generate src/calculator.udl --language swift --out-dir ../calculator-swift/Sources/Calculator --no-format
 popd
 
-cargo build --package calculator-ffi --profile release-smaller --target x86_64-apple-darwin
-cargo build --package calculator-ffi --profile release-smaller --target aarch64-apple-darwin
-cargo build --package calculator-ffi --profile release-smaller --target x86_64-apple-ios
-cargo build --package calculator-ffi --profile release-smaller --target aarch64-apple-ios
-cargo +nightly build --package calculator-ffi --release -Z build-std --target aarch64-apple-ios-sim
+cargo build --package calculator-ffi --features uniffi/cli --profile release-smaller --target x86_64-apple-darwin
+cargo build --package calculator-ffi --features uniffi/cli --profile release-smaller --target aarch64-apple-darwin
+cargo build --package calculator-ffi --features uniffi/cli --profile release-smaller --target x86_64-apple-ios
+cargo build --package calculator-ffi --features uniffi/cli --profile release-smaller --target aarch64-apple-ios
+cargo +nightly build --package calculator-ffi --features uniffi/cli --release -Z build-std --target aarch64-apple-ios-sim
 
 mkdir -p target/lipo-ios-sim/release-smaller
 lipo target/aarch64-apple-ios-sim/release/libcalculatorffi.a target/x86_64-apple-ios/release-smaller/libcalculatorffi.a -create -output target/lipo-ios-sim/release-smaller/libcalculatorffi.a
