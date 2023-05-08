@@ -136,7 +136,6 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
             }
         }
 
-        // generate the bindings using the ffi-bindgen tool located in the ffi-bindgen directory
         val generateAndroidBindings by tasks.register<Exec>("generateAndroidBindings") {
             dependsOn(moveNativeAndroidLibs)
 

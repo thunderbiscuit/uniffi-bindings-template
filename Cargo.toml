@@ -1,7 +1,7 @@
 [workspace]
-members = ["calculator-ffi", "ffi-bindgen"]
-default-members = ["calculator-ffi", "ffi-bindgen"]
-exclude = ["calculator-android", "calculator-swift", "example-apps"]
+members = ["calculator-ffi"]
+default-members = ["calculator-ffi"]
+exclude = ["calculator-android", "calculator-jvm", "calculator-swift"]
 
 [profile.release-smaller]
 inherits = "release"

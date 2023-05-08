@@ -1,3 +1,6 @@
+use std::thread;
+use rand::Rng;
+
 uniffi::include_scaffolding!("calculator");
 
 pub fn welcome(name: String) -> String {
@@ -42,9 +45,58 @@ pub enum CalculatorSize {
     Small,
 }
 
+pub struct Calendar {
+    reminder: Box<dyn Reminder>
+}
+
+impl Calendar {
+    pub fn new(reminder: Box<dyn Reminder>) -> Self {
+        Self { reminder }
+    }
+
+    pub fn today(&self) -> String {
+        "Today is a good day".to_string()
+    }
+
+    pub fn my_events(&self) -> String {
+        self.reminder.remind_me().unwrap()
+    }
+
+    pub fn start(&self) -> () {
+        for _ in 0..10 {
+            thread::sleep(std::time::Duration::from_secs(4));
+            let mut rng = rand::thread_rng();
+            let number = rng.gen_range(0..3);
+            let event = match number {
+                0 => Event::Party,
+                1 => Event::Birthday,
+                2 => Event::Meeting,
+                _ => Event::Party,
+            };
+            match self.reminder.ping_me(event) {
+                Ok(_) => (),
+                Err(e) => println!("Error: {:?}", e),
+            }
+        }
+    }
+}
+
+pub trait Reminder: Send + Sync + std::fmt::Debug {
+    fn remind_me(&self) -> Result<String, CalculatorError>;
+
+    fn ping_me(&self, event: Event) -> Result<(), CalculatorError>;
+}
+
+pub enum Event {
+    Party,
+    Birthday,
+    Meeting,
+}
+
 #[derive(Debug)]
 pub enum CalculatorError {
-    DivisionBy0
+    DivisionBy0,
+    OtherError,
 }
 
 impl std::fmt::Display for CalculatorError {
@@ -54,3 +106,11 @@ impl std::fmt::Display for CalculatorError {
 }
 
 impl std::error::Error for CalculatorError {}
+
+// Need to implement this From<> impl in order to handle unexpected callback errors.  See the
+// Callback Interfaces section of the handbook for more info.
+impl From<uniffi::UnexpectedUniFFICallbackError> for CalculatorError {
+    fn from(_: uniffi::UnexpectedUniFFICallbackError) -> Self {
+        Self::OtherError
+    }
+}

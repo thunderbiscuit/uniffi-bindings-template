@@ -1,14 +1,5 @@
 package org.rustylibs.plugins
 
-// import org.gradle.api.Plugin
-// import org.gradle.api.Project
-// import org.gradle.api.tasks.Copy
-// import org.gradle.api.tasks.Exec
-// import org.gradle.kotlin.dsl.environment
-// import org.gradle.kotlin.dsl.getValue
-// import org.gradle.kotlin.dsl.provideDelegate
-// import org.gradle.kotlin.dsl.register
-
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -93,7 +84,6 @@ internal class UniFfiJvmPlugin : Plugin<Project> {
             }
         }
 
-        // generate the bindings using the bdk-ffi-bindgen tool created in the bdk-ffi submodule
         val generateJvmBindings by tasks.register<Exec>("generateJvmBindings") {
 
             dependsOn(moveNativeJvmLibs)
@@ -102,13 +92,15 @@ internal class UniFfiJvmPlugin : Plugin<Project> {
             executable("cargo")
             args(
                 "run",
-                "--package",
-                "ffi-bindgen",
-                "--",
+                "--bin",
+                "uniffi-bindgen",
+                "generate",
+                "src/calculator.udl",
                 "--language",
                 "kotlin",
                 "--out-dir",
-                "../calculator-jvm/lib/src/main/kotlin"
+                "../calculator-jvm/lib/src/main/kotlin",
+                "--no-format",
             )
 
             doLast {
