@@ -6,7 +6,6 @@ rustup target add aarch64-apple-darwin x86_64-apple-darwin
 
 pushd calculator-ffi
 cargo run --features uniffi/cli --bin uniffi-bindgen generate src/calculator.udl --language swift --out-dir ../calculator-swift/Sources/Calculator --no-format
-popd
 
 cargo build --package calculator-ffi --features uniffi/cli --profile release-smaller --target x86_64-apple-darwin
 cargo build --package calculator-ffi --features uniffi/cli --profile release-smaller --target aarch64-apple-darwin
@@ -19,14 +18,15 @@ lipo target/aarch64-apple-ios-sim/release/libcalculatorffi.a target/x86_64-apple
 mkdir -p target/lipo-macos/release-smaller
 lipo target/aarch64-apple-darwin/release-smaller/libcalculatorffi.a target/x86_64-apple-darwin/release-smaller/libcalculatorffi.a -create -output target/lipo-macos/release-smaller/libcalculatorffi.a
 
+popd
 pushd calculator-swift
 mv Sources/Calculator/calculator.swift Sources/Calculator/Calculator.swift
 cp Sources/Calculator/calculatorFFI.h calculatorFFI.xcframework/ios-arm64/calculatorFFI.framework/Headers
 cp Sources/Calculator/calculatorFFI.h calculatorFFI.xcframework/ios-arm64_x86_64-simulator/calculatorFFI.framework/Headers
 cp Sources/Calculator/calculatorFFI.h calculatorFFI.xcframework/macos-arm64_x86_64/calculatorFFI.framework/Headers
-cp ../target/aarch64-apple-ios/release-smaller/libcalculatorffi.a calculatorFFI.xcframework/ios-arm64/calculatorFFI.framework/calculatorFFI
-cp ../target/lipo-ios-sim/release-smaller/libcalculatorffi.a calculatorFFI.xcframework/ios-arm64_x86_64-simulator/calculatorFFI.framework/calculatorFFI
-cp ../target/lipo-macos/release-smaller/libcalculatorffi.a calculatorFFI.xcframework/macos-arm64_x86_64/calculatorFFI.framework/calculatorFFI
+cp ../calculator-ffi/target/aarch64-apple-ios/release-smaller/libcalculatorffi.a calculatorFFI.xcframework/ios-arm64/calculatorFFI.framework/calculatorFFI
+cp ../calculator-ffi/target/lipo-ios-sim/release-smaller/libcalculatorffi.a calculatorFFI.xcframework/ios-arm64_x86_64-simulator/calculatorFFI.framework/calculatorFFI
+cp ../calculator-ffi/target/lipo-macos/release-smaller/libcalculatorffi.a calculatorFFI.xcframework/macos-arm64_x86_64/calculatorFFI.framework/calculatorFFI
 rm Sources/Calculator/calculatorFFI.h
 rm Sources/Calculator/calculatorFFI.modulemap
 #rm calculatorFFI.xcframework.zip || true
