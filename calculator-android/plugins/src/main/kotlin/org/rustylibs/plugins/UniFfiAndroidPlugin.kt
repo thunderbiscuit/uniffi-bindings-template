@@ -120,15 +120,15 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
             into("${project.projectDir}/../lib/src/main/jniLibs/")
 
             into("arm64-v8a") {
-                from("${project.projectDir}/../../target/aarch64-linux-android/release/libcalculatorffi.so")
+                from("${project.projectDir}/../../calculator-ffi/target/aarch64-linux-android/release/libcalculatorffi.so")
             }
 
             into("x86_64") {
-                from("${project.projectDir}/../../target/x86_64-linux-android/release/libcalculatorffi.so")
+                from("${project.projectDir}/../../calculator-ffi/target/x86_64-linux-android/release/libcalculatorffi.so")
             }
 
             into("armeabi-v7a") {
-                from("${project.projectDir}/../../target/armv7-linux-androideabi/release/libcalculatorffi.so")
+                from("${project.projectDir}/../../calculator-ffi/target/armv7-linux-androideabi/release/libcalculatorffi.so")
             }
 
             doLast {
