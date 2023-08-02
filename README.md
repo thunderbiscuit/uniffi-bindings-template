@@ -17,6 +17,17 @@ repositories {
 }
 ```
 
+<br>
+
+## Build the library for iOS
+1. Run the `build-local-swift.sh` script
+```shell
+source build-local-swift.sh
+```
+See the [Swift readme](./calculator-swift/README.md) for more details.
+
+<br>
+
 ## A few important pieces of this template
 ### The custom Gradle plugin for the Android library
 This plugin lives in the `calculator-android/plugins/` directory, and collects the tasks of building the native binaries, building the glue code file, and putting them all in the correct places in the library to prepare for packaging. The plugin exposes the `buildAndroidLib` task to the Gradle build tool.
