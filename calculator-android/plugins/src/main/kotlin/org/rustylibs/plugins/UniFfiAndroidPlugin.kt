@@ -39,7 +39,9 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
 
                 Pair("CFLAGS", "-D__ANDROID_API__=21"),
                 Pair("CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER", "aarch64-linux-android21-clang"),
-                Pair("CC", "aarch64-linux-android21-clang")
+                Pair("CC", "aarch64-linux-android21-clang"),
+                Pair("AR", "llvm-ar"),
+                Pair("RANLIB", "llvm-ranlib")
             )
 
             doLast {
@@ -71,7 +73,9 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
 
                 Pair("CFLAGS", "-D__ANDROID_API__=21"),
                 Pair("CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER", "x86_64-linux-android21-clang"),
-                Pair("CC", "x86_64-linux-android21-clang")
+                Pair("CC", "x86_64-linux-android21-clang"),
+                Pair("AR", "llvm-ar"),
+                Pair("RANLIB", "llvm-ranlib")
             )
 
             doLast {
@@ -102,7 +106,9 @@ internal class UniFfiAndroidPlugin : Plugin<Project> {
 
                 Pair("CFLAGS", "-D__ANDROID_API__=21"),
                 Pair("CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER", "armv7a-linux-androideabi21-clang"),
-                Pair("CC", "armv7a-linux-androideabi21-clang")
+                Pair("CC", "armv7a-linux-androideabi21-clang"),
+                Pair("AR", "llvm-ar"),
+                Pair("RANLIB", "llvm-ranlib")
             )
 
             doLast {
