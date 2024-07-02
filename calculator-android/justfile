@@ -1,0 +1,5 @@
+default:
+  just --list
+
+buildmacos:
+  bash ./scripts/build-macos-aarch64-only.sh
