@@ -4,6 +4,7 @@ Cargo.lock
 .idea/
 calculator-bindings.iml
 libcalculatorffi.so
+libcalculatorffi.dylib
 calculator.kt
 local.properties
 .DS_Store
