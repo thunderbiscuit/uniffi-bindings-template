@@ -1,8 +1,8 @@
 plugins {
     id("com.android.library")
-    id("org.jetbrains.kotlin.android") version "1.6.10"
-    id("maven-publish")
-    id("signing")
+    id("org.jetbrains.kotlin.android") version "1.9.20"
+    id("org.gradle.maven-publish")
+    id("org.gradle.signing")
 }
 
 repositories {
@@ -11,11 +11,12 @@ repositories {
 }
 
 android {
-    compileSdk = 31
+    namespace = "org.rustylibs"
+    compileSdk = 34
 
     defaultConfig {
-        minSdk = 21
-        targetSdk = 31
+        minSdk = 24
+        targetSdk = 34
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -36,7 +37,7 @@ android {
 }
 
 dependencies {
-    implementation("net.java.dev.jna:jna:5.8.0@aar")
+    implementation("net.java.dev.jna:jna:5.14.0@aar")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7")
     implementation("androidx.appcompat:appcompat:1.4.0")
     implementation("androidx.core:core-ktx:1.7.0")

@@ -1,5 +1,8 @@
 default:
   just --list
 
-buildmacos:
+build-macos:
   bash ./scripts/build-macos-aarch64-only.sh
+
+publish-local:
+  ./gradlew publishToMavenLocal

@@ -1,6 +1,8 @@
-target
+# Rust
+target/
 Cargo.lock
 
+# Kotlin
 .idea/
 calculator-bindings.iml
 libcalculatorffi.so
@@ -9,7 +11,7 @@ calculator.kt
 local.properties
 .DS_Store
 
-# swift related
+# Swift
 /.build
 /.swiftpm
 /Packages
