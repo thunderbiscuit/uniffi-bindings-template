@@ -3,9 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android") version "1.6.10"
     id("maven-publish")
     id("signing")
-
-    // Custom plugin to generate the native libs and bindings file
-    id("org.rustylibs.plugins.generate-android-bindings")
 }
 
 repositories {
