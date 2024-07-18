@@ -26,3 +26,4 @@ Calculator.swift
 calculatorFFI.h
 .build
 .swiftpm
+calculatorFFI.xcframework/

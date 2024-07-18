@@ -3,4 +3,5 @@ package_name = "org.rustylibs.calculator"
 cdylib_name = "calculatorffi"
 
 [bindings.swift]
+module_name = "Calculator"
 cdylib_name = "calculatorffi"
